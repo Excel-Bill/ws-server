@@ -194,8 +194,6 @@ io.on("connection", (socket) => {
 
   // DELETE USER ROW
   socket.on("delete_user", ({ sessionId }) => {
-    if (!socket.data.isAdmin) return;
-
     // 1️⃣ Remove from sessions map
     sessions.delete(sessionId);
 
