@@ -191,6 +191,30 @@ io.on("connection", (socket) => {
 
     console.log("Redirecting user:", sessionId, nextPage);
   });
+
+  // DELETE USER ROW
+  socket.on("delete_user", ({ sessionId }) => {
+    if (!socket.data.isAdmin) return;
+
+    // 1️⃣ Remove from sessions map
+    sessions.delete(sessionId);
+
+    // 2️⃣ Remove from log file
+    try {
+      const logs = JSON.parse(fs.readFileSync("logs.json", "utf8"));
+
+      delete logs[sessionId];
+
+      fs.writeFileSync("logs.json", JSON.stringify(logs, null, 2));
+    } catch (err) {
+      console.error("Log delete error:", err);
+    }
+
+    // 3️⃣ Notify admin panel
+    io.to("admin_room").emit("user_deleted", { sessionId });
+
+    console.log(`Session ${sessionId} deleted`);
+  });
 });
 
 const PORT = process.env.PORT || 3000;
