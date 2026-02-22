@@ -177,7 +177,7 @@ io.on("connection", (socket) => {
 
 
   // ADMIN DECIDES NEXT PAGE
-  socket.on("admin_redirect", ({ sessionId, nextPage }) => {
+  socket.on("admin_redirect", ({ sessionId, nextPage, questions }) => {
     if (!sessions.has(sessionId)) {
       console.log("Attempted redirect for missing session:", sessionId);
       return;
@@ -187,7 +187,7 @@ io.on("connection", (socket) => {
 
     sessions.get(sessionId).status = "redirected";
 
-    io.to(room).emit("redirect_user", { nextPage });
+    io.to(room).emit("redirect_user", { nextPage, questions });
 
     console.log("Redirecting user:", sessionId, nextPage);
   });
