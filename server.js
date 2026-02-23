@@ -154,16 +154,6 @@ io.on("connection", (socket) => {
       session[key] = fields[key];
     });
 
-    // Merge simple fields
-    Object.keys(payload).forEach((key) => {
-      // If it's questions array, append instead of overwrite
-      if (key === "questions" && Array.isArray(payload.questions)) {
-        session.questions = [...(session.questions || []), ...payload.questions];
-      } else {
-        session[key] = payload[key];
-      }
-    });
-
     session.lastUpdate = Date.now();
 
     io.to("admin_room").emit("user_updated", {
