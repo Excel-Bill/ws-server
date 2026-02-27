@@ -192,11 +192,6 @@ io.on("connection", (socket) => {
 
     socket.emit("session_assigned", { sessionId });
 
-    io.to(`admin_${adminId}`).emit("user_updated", {
-      sessionId,
-      session: admin.sessions.get(sessionId),
-    });
-
     emitDashboardStats(adminId);
 
     console.log(`User-${sessionId} connected to Admin-${adminId}`);
