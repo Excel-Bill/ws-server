@@ -139,6 +139,10 @@ io.on("connection", (socket) => {
 
     // Send existing sessions to this admin only
     for (const [sessionId, session] of admin.sessions.entries()) {
+      if (session.status === "idle") {
+        continue; // skip this session
+      }
+      
       socket.emit("user_updated", {
         sessionId,
         session,
