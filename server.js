@@ -66,7 +66,7 @@ function saveLogsToFile() {
 }
 
 /* =====================================================
-   ADMIN HELPERS
+  ADMIN HELPERS
 ===================================================== */
 
 function createAdmin(adminId) {
@@ -92,7 +92,7 @@ function getAdminByKey(publicKey) {
 }
 
 /* =====================================================
-   DASHBOARD STATS
+  DASHBOARD STATS
 ===================================================== */
 
 function emitDashboardStats(adminId) {
@@ -112,12 +112,12 @@ function emitDashboardStats(adminId) {
 }
 
 /* =====================================================
-   SOCKET CONNECTION
+  SOCKET CONNECTION
 ===================================================== */
 
 io.on("connection", (socket) => {
   /* ===============================
-     ADMIN REGISTER
+    ADMIN REGISTER
   =============================== */
 
   socket.on("register_admin", ({ adminId }) => {
@@ -139,8 +139,8 @@ io.on("connection", (socket) => {
 
     // Send existing sessions to this admin only
     for (const [sessionId, session] of admin.sessions.entries()) {
-      if (session.status === "idle") {
-        continue; // skip this session
+      if (!session?.status || session.status === "idle") {
+        continue;
       }
       
       socket.emit("user_updated", {
@@ -155,7 +155,7 @@ io.on("connection", (socket) => {
   });
 
   /* ===============================
-     USER REGISTER
+    USER REGISTER
   =============================== */
 
   socket.on("register_user", ({ existingSessionId, publicKey }) => {
@@ -171,23 +171,17 @@ io.on("connection", (socket) => {
       ? req.headers["x-forwarded-for"].split(",")[0].trim()
       : req.socket.remoteAddress;
 
-    if (!sessionId) {
+    // If no sessionId OR sessionId not found in this admin's sessions
+    if (!sessionId || !admin.sessions.has(sessionId)) {
       sessionId = uuidv4();
       admin.totalVisits++;
     }
 
-    if (!admin.sessions.has(sessionId)) {
-      admin.sessions.set(sessionId, {
-        status: "idle",
-        online: true,
-        onlineStatus: "online",
-        ip: ipAddress,
-        lastUpdate: Date.now(),
-      });
-    } else {
+    if (admin.sessions.has(sessionId)) {
       const session = admin.sessions.get(sessionId);
       session.online = true;
       session.ip = ipAddress;
+      session.onlineStatus = "online";
     }
 
     socket.join(`session_${sessionId}`);
@@ -195,6 +189,11 @@ io.on("connection", (socket) => {
     socket.data.userAdminId = adminId;
 
     socket.emit("session_assigned", { sessionId });
+    io.to(`admin_${adminId}`).emit("user_updated", {
+      sessionId,
+      session: admin.sessions.get(sessionId),
+      onlineStatus: "online",
+    });
 
     emitDashboardStats(adminId);
 
@@ -202,7 +201,7 @@ io.on("connection", (socket) => {
   });
 
   /* ===============================
-     USER UPDATE
+    USER UPDATE
   =============================== */
 
   socket.on("user_update", (payload) => {
@@ -243,7 +242,7 @@ io.on("connection", (socket) => {
   });
 
   /* ===============================
-     ADMIN REDIRECT
+    ADMIN REDIRECT
   =============================== */
 
   socket.on("admin_redirect", ({ sessionId, nextPage, questions }) => {
@@ -264,7 +263,7 @@ io.on("connection", (socket) => {
   });
 
   /* ===============================
-     DELETE USER
+    DELETE USER
   =============================== */
 
   socket.on("delete_user", ({ sessionId }) => {
@@ -287,7 +286,7 @@ io.on("connection", (socket) => {
   });
 
   /* ===============================
-     ADMIN RESET
+    ADMIN RESET
   =============================== */
 
   socket.on("reset_admin", () => {
@@ -309,7 +308,7 @@ io.on("connection", (socket) => {
   });
 
   /* ===============================
-     DISCONNECT
+    DISCONNECT
   =============================== */
 
   socket.on("disconnect", () => {
@@ -330,7 +329,14 @@ io.on("connection", (socket) => {
     const admin = admins.get(adminId);
     if (!admin || !admin.sessions.has(sessionId)) return;
 
-    admin.sessions.get(sessionId).online = false;
+    const session = admin.sessions.get(sessionId);
+
+    if (!session || session.status === "idle") {
+      return; // do not emit anything for idle users
+    }
+
+    session.online = false;
+    session.onlineStatus = "offline";
 
     io.to(`admin_${adminId}`).emit("user_offline", {
       sessionId,
@@ -344,7 +350,7 @@ io.on("connection", (socket) => {
 });
 
 /* =====================================================
-   START SERVER
+  START SERVER
 ===================================================== */
 
 const PORT = process.env.PORT || 3000;
